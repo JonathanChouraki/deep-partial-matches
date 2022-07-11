@@ -1,8 +1,6 @@
 import {
-  all, compose, equals, mapObjIndexed, values, path, is, flatten, cond, map, identity, T, addIndex,
+  all, compose, equals, mapObjIndexed, values, path, is, flatten, cond, map, identity, T, tap,
 } from 'ramda';
-
-const mapIndexed = addIndex(map);
 
 const recursivelyFlatten = (value) => cond([
   [is(Array), compose(map(recursivelyFlatten), flatten)],
@@ -14,15 +12,6 @@ const mapObjectToMatch = (objectToMatch, currentPath = []) => mapObjIndexed(
     [
       is(Object),
       compose(values, mapObjectToMatch(objectToMatch, [...currentPath, key])),
-    ],
-    [
-      is(Array),
-      compose(
-        values,
-        mapIndexed(
-          (v, index) => mapObjectToMatch(objectToMatch, [...currentPath, key, index])(v),
-        ),
-      ),
     ],
     [
       T,
